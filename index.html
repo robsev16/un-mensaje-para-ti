@@ -1,12 +1,255 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prueba móvil</title>
+  <title>Un mensaje para ti</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #101828, #243b53);
+      color: #172033;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 560px;
+      width: 100%;
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 12px 40px #0006;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    h2 {
+      font-size: 25px;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .tag,
+    .small {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .verse {
+      border-left: 4px solid #2563eb;
+      padding-left: 14px;
+      font-style: italic;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin: 12px 0;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.alt {
+      background: #e2e8f0;
+      color: #172033;
+    }
+
+    .progress {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .bar {
+      height: 100%;
+      background: #2563eb;
+      width: 10%;
+      transition: width 0.3s;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>¡Funciona en el teléfono!</h1>
-  <p>La página carga correctamente.</p>
+  <main class="card">
+    <div class="tag">
+      Historia interactiva · Iglesia Bethel Asambleas de Dios
+    </div>
+
+    <section id="screen">
+      <h1>Un mensaje para ti</h1>
+
+      <p>
+        Imagina que estás teniendo un día difícil.
+        Tienes preguntas, presión y cosas que nadie parece entender.
+      </p>
+
+      <p>
+        Encuentras un mensaje que te invita a detenerte.
+      </p>
+
+      <button data-next="1">Leer el mensaje</button>
+    </section>
+
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+
+    <p class="small">
+      Tus respuestas cambian el recorrido.
+      No hay respuestas perfectas.
+    </p>
+  </main>
+
+  <script>
+    const screen = document.getElementById("screen");
+    const bar = document.getElementById("bar");
+
+    const pages = {
+      1: {
+        title: "¿Cómo reaccionas?",
+        text: "Cuando la vida se vuelve difícil, ¿qué sueles hacer?",
+        options: [
+          ["Me encierro y lo soporto solo", 2],
+          ["Busco a alguien que me escuche", 3],
+          ["Me distraigo para no pensar", 4]
+        ]
+      },
+
+      2: {
+        title: "Cuando cargas todo solo",
+        text: "Quizá sonríes delante de los demás, pero por dentro estás agotado y sientes que nadie sabe lo que estás cargando. Dios sí conoce tu corazón. No tienes que fingir delante de Él: puedes acercarte con tu cansancio, reconocer tu necesidad y encontrar esperanza en Jesucristo.",
+        options: [["Continuar", 5]]
+      },
+
+      3: {
+        title: "Cuando buscas a alguien",
+        text: "Contar con personas que nos escuchen es valioso, pero ninguna persona puede ocupar el lugar de Dios. Tus amigos pueden acompañarte, aunque solo Jesucristo puede reconciliarte con el Padre y darte la salvación. Dios te llama a acudir a Él con fe y a caminar junto a una comunidad de creyentes.",
+        options: [["Continuar", 5]]
+      },
+
+      4: {
+        title: "Cuando intentas distraerte",
+        text: "Quizá llenas tu día de videos, juegos, música o conversaciones para no quedarte a solas con tus pensamientos. No eres invisible para Dios, y Él no desprecia tus preguntas ni tu dolor. En lugar de esconder lo que llevas dentro, puedes presentárselo a Él y descubrir la esperanza que hay en Cristo.",
+        options: [["Continuar", 5]]
+      },
+
+      5: {
+        title: "Una verdad para todos",
+        text: "Todos hemos pecado y estamos separados de la gloria de Dios. El pecado expresa nuestra rebelión y nuestra incapacidad de reconciliarnos con Dios por nuestros propios méritos.",
+        options: [["Descubrir la respuesta de Dios", 6]]
+      },
+
+      6: {
+        title: "La iniciativa de Dios",
+        text: "Dios nos ama y tomó la iniciativa para salvarnos. Jesucristo, el Hijo de Dios, vivió sin pecado, murió en la cruz por nuestros pecados y resucitó corporalmente. La salvación es por gracia mediante la fe en Jesucristo, no por obras.",
+        options: [["¿Cómo puedo responder?", 7]]
+      },
+
+      7: {
+        title: "Una respuesta personal",
+        text: "La respuesta bíblica es arrepentirse y creer en Jesucristo: reconocer el pecado, apartarse de él y confiar en Jesús como Salvador y Señor. El Espíritu Santo produce el nuevo nacimiento y comienza una obra de transformación.",
+        options: [
+          ["Quiero conocer más", 8],
+          ["Quiero pensar y leer la Biblia", 9]
+        ]
+      },
+
+      8: {
+        title: "Conocer más de Jesús",
+        text: "Si deseas conocer más de Jesús, puedes asistir a una de las iglesias de las Asambleas de Dios cercana. Allí podrás escuchar la Palabra de Dios, hacer preguntas y recibir acompañamiento espiritual. También puedes comenzar leyendo el Evangelio de Juan y orando.",
+        options: [["Leer una promesa", 10]]
+      },
+
+      9: {
+        title: "Tómate un momento",
+        text: "No tienes que responder por presión. Puedes leer la Biblia y hablar con alguien maduro en la fe. Considera quién es Jesús, qué hizo en la cruz y qué significa confiar en Él con arrepentimiento y fe.",
+        options: [["Continuar", 11]]
+      },
+
+      11: {
+        title: "Da el siguiente paso",
+        text: "Si deseas conocer más de Jesús, puedes asistir a una de las iglesias de las Asambleas de Dios cercana. Allí podrás conocer más de Cristo, escuchar la Palabra de Dios y recibir acompañamiento espiritual. No tienes que caminar solo: busca una comunidad donde Cristo sea anunciado, la Biblia sea enseñada y puedas crecer en la fe.",
+        options: [["Leer una promesa", 10]]
+      },
+
+      10: {
+        title: "Una promesa de Jesús",
+        text: "Vengan a mí todos ustedes que están cansados y agobiados, y yo les daré descanso. — Mateo 11:28",
+        options: [["Volver al inicio", 0]]
+      }
+    };
+
+    function showPage(id) {
+      if (id === 0) {
+        window.location.reload();
+        return;
+      }
+
+      const page = pages[id];
+
+      if (!page) return;
+
+      screen.innerHTML = "";
+
+      const title = document.createElement("h2");
+      title.textContent = page.title;
+      screen.appendChild(title);
+
+      const paragraph = document.createElement("p");
+      paragraph.textContent = page.text;
+
+      if (id === 10) {
+        paragraph.className = "verse";
+      }
+
+      screen.appendChild(paragraph);
+
+      page.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option[0];
+        button.dataset.next = option[1];
+
+        if (option[1] === 0) {
+          button.className = "alt";
+        }
+
+        screen.appendChild(button);
+      });
+
+      bar.style.width = (id / 10 * 100) + "%";
+    }
+
+    screen.addEventListener("click", function(event) {
+      const button = event.target.closest("button");
+
+      if (!button) return;
+
+      const nextPage = Number(button.dataset.next);
+      showPage(nextPage);
+    });
+  </script>
 </body>
 </html>
